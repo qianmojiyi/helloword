@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	model "helloword/internal/model"
-	"log"
+	//"log"
+	"go-common/library/log"
 )
 
 // AddUser mysql添加用户
@@ -46,7 +47,7 @@ func (d *dao) SearchUser(data *model.Users) (map[string]string, error) {
 
 //SearchStructUser 结构体查询
 func (d *dao) SearchStructUser(data *model.Users) (*model.Users, error) {
-	data.Name = "zhangkunling"
+	data.Name = "tom"
 	fmt.Println(data.Age, data.Name)
 
 	fmt.Println("-----", data) //接收service下的方法
@@ -61,39 +62,33 @@ func (d *dao) SearchStructUser(data *model.Users) (*model.Users, error) {
 	return data, nil
 }
 
-//SearchStruct 多条查询，返回的是一条数据
-func (d *dao) SearchStruct(data *model.Users) (*model.Users, error) {
-	//data.Name = "zhangkunling"
-	//data.Age = 18
+//SearchStruct 返回列表查询
+//func (d *dao) SearchStruct(data *model.Users) (userlist []*model.Users, err error) {
+func (d *dao) SearchStruct() (userlist []*model.Users, err error) {
 	rows, err := d.db.Query(context.TODO(), "select * from users")
 	if err != nil {
-		fmt.Printf("返回 %s", err)
-		log.Fatalln(err)
-		//return nil, err
+		log.Error("error:", err)
 	}
 
+	userlist = make([]*model.Users, 0) //make创建切片，切片长度不固定，可以追加
+	fmt.Println("userlist前", userlist)
 	for rows.Next() {
+		data := new(model.Users) //实例化清空，不进行实例化，返回多条最后一条数据
 		err := rows.Scan(&data.Uid, &data.Name, &data.Age, &data.Ctime, &data.Mtime)
 		if err != nil {
-			log.Fatal("err", err)
+			log.Error("error:", err)
 		}
-		log.Println("log:", data.Uid, data.Name, data.Age, data.Ctime, data.Mtime)
 		fmt.Println("rowlog:", data)
+		userlist = append(userlist, data) //内存地址
 	}
-	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("data:", data)
-	return data, nil
+	return userlist, nil
 }
 
 //UpdateUser 修改数据
 func (d *dao) UpdateUser(data *model.Users) (int64, error) {
 	data = new(model.Users)
-	data.Name = "kun"
-	res, err := d.db.Exec(context.TODO(), "update users set name = ? where uid = ? ", data.Name, 9)
+	data.Name = "kelly"
+	res, err := d.db.Exec(context.TODO(), "update users set name = ? where uid = ? ", data.Name, 18)
 	if err != nil {
 		fmt.Println("update failed err:", err)
 	} else {
@@ -106,7 +101,7 @@ func (d *dao) UpdateUser(data *model.Users) (int64, error) {
 //DeleteUser 删除数据
 func (d *dao) DeleteUser(data *model.Users) (int64, error) {
 	data = new(model.Users)
-	data.Name = "zhangkunling"
+	data.Name = "kelly"
 	res, err := d.db.Exec(context.TODO(), "delete from users where name = ? and uid=8", data.Name)
 	if err != nil {
 		fmt.Println("delete err:", err)

@@ -17,20 +17,28 @@ import (
 
 var Provider = wire.NewSet(New, NewDB, NewRedis, NewMC)
 
-//go:generate kratos tool btsgen
-// Dao dao interface
-type Dao interface {
-	Close()
-	Ping(ctx context.Context) (err error)
-	// bts: -nullcache=&model.Article{ID:-1} -check_null_code=$!=nil&&$.ID==-1
-	Article(c context.Context, id int64) (*model.Article, error)
-	AddUser(data *model.Users) (int64, error)
-	UpdateUser(data *model.Users) (int64, error)
-	DeleteUser(data *model.Users) (int64, error)
-	SearchUser(data *model.Users) (map[string]string, error)
-	SearchStructUser(data *model.Users) (*model.Users, error)
-	SearchStruct(data *model.Users) (*model.Users, error)
-}
+type (
+	//go:generate kratos tool btsgen
+	// Dao dao interface
+	Dao interface {
+		Close()
+		Ping(ctx context.Context) (err error)
+		// bts: -nullcache=&model.Article{ID:-1} -check_null_code=$!=nil&&$.ID==-1
+		Article(c context.Context, id int64) (*model.Article, error)
+		AddUser(data *model.Users) (int64, error)
+		UpdateUser(data *model.Users) (int64, error)
+		DeleteUser(data *model.Users) (int64, error)
+		SearchUser(data *model.Users) (map[string]string, error)
+		SearchStructUser(data *model.Users) (*model.Users, error)
+		SearchStruct() ([]*model.Users, error)
+
+		RedisAdd(data *model.Users) (users string, err error)
+		RedisDel(data *model.Users) (users string, err error)
+		RedisGet(data *model.Users) (users string, err error)
+		RedisUser(data *model.Users) (users *model.Users, err error)
+		NewRedisGet(data *model.Users) (users *model.Users, err error)
+	}
+)
 
 // dao dao.
 type dao struct {

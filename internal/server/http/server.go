@@ -47,6 +47,12 @@ func initRouter(e *bm.Engine) {
 		g.GET("/search", SearchStruct)
 		g.GET("/update", UpdateUser)
 		g.GET("/delete", DeleteUser)
+
+		g.GET("/redisadd", RedisAdd)
+		g.GET("/redisdel", RedisDel)
+		g.GET("/redisget", RedisGet)
+		g.GET("/redisuser", RedisUser)
+		g.GET("/newredisget", NewRedisGet)
 	}
 }
 
@@ -122,4 +128,53 @@ func DeleteUser(c *bm.Context) {
 		return
 	}
 	c.JSON(id, nil)
+}
+
+func RedisUser(c *bm.Context) {
+	users, err := svc.RedisUser()
+	if err != nil {
+		c.JSON("error:", err)
+		return
+	}
+	println("RedisUser:", users)
+	c.JSON(users, nil)
+}
+
+func RedisAdd(c *bm.Context) {
+	users, err := svc.RedisAdd()
+	if err != nil {
+		c.JSON("error:", err)
+		return
+	}
+	println("newadduser:", users)
+	c.JSON(users, nil)
+}
+
+func RedisDel(c *bm.Context) {
+	users, err := svc.RedisDel()
+	if err != nil {
+		c.JSON("error:", err)
+		return
+	}
+	println("redis_del:", users)
+	c.JSON(users, nil)
+}
+
+func RedisGet(c *bm.Context) {
+	users, err := svc.RedisGet()
+	if err != nil {
+		c.JSON("error:", err)
+		return
+	}
+	println("redis_get:", users)
+	c.JSON(users, nil)
+}
+func NewRedisGet(c *bm.Context) {
+	users, err := svc.NewRedisGet()
+	if err != nil {
+		c.JSON("error:", err)
+		return
+	}
+	println("redis_get:", users)
+	c.JSON(users, nil)
 }
