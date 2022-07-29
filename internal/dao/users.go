@@ -19,7 +19,7 @@ func (d *dao) AddUser(data *model.Users) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("新增姓名 %s 出错，错误为 %v", data.Name, err)
 	}
-	id, err := res.LastInsertId()
+	id, err := res.LastInsertId() //获取数据库uid
 
 	if err != nil {
 		return 0, fmt.Errorf("返回 id 出错，错误为 %v", err)
@@ -98,17 +98,17 @@ func (d *dao) UpdateUser(data *model.Users) (int64, error) {
 	return id, nil
 }
 
-//DeleteUser 删除数据
-func (d *dao) DeleteUser(data *model.Users) (int64, error) {
-	data = new(model.Users)
-	data.Name = "kelly"
-	res, err := d.db.Exec(context.TODO(), "delete from users where name = ? and uid=8", data.Name)
-	if err != nil {
-		fmt.Println("delete err:", err)
-	} else {
-		fmt.Println("delete success")
-	}
-
-	id, err := res.LastInsertId()
-	return id, nil
-}
+////DeleteUser 删除数据
+//func (d *dao) DeleteUser(data *model.Users) (int64, error) {
+//	data = new(model.Users)
+//	data.Name = "kelly"
+//	res, err := d.db.Exec(context.TODO(), "delete from users where name = ? and uid=8", data.Name)
+//	if err != nil {
+//		fmt.Println("delete err:", err)
+//	} else {
+//		fmt.Println("delete success")
+//	}
+//
+//	id, err := res.LastInsertId()
+//	return id, nil
+//}

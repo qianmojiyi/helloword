@@ -25,6 +25,8 @@ type (
 		Ping(ctx context.Context) (err error)
 		// bts: -nullcache=&model.Article{ID:-1} -check_null_code=$!=nil&&$.ID==-1
 		Article(c context.Context, id int64) (*model.Article, error)
+
+		//新增接口
 		AddUser(data *model.Users) (int64, error)
 		UpdateUser(data *model.Users) (int64, error)
 		DeleteUser(data *model.Users) (int64, error)
